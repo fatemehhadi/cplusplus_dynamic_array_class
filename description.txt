@@ -1,0 +1,220 @@
+The purpose of this exercise is to gain experience with
+class design.
+
+Develop a dynamic array-like class.
+Your class design must support full encapsulation techniques.
+
+Name your class StudentVec.
+
+This class will implement, and provide, a subset of the
+Stdlib <vector> container class. The API semantics will 
+be the same as <vector>.
+
+Note that all of the API components, and their semantics,
+are identical to those in <vector>.
+
+Specify StudentVec  in studentvec.cpp and studentvec.h.
+
+In order to simplify testing your StudentVec class,
+you must use my main driver function, as shown below.
+
+I am supplying main() as a test driver program
+
+Your output must match mine exactly.
+
+Your StudentVec class must fully provide the following API,
+as exercised/tested by my  main() function body:
+
+REQUIRED API
+
+DATA TYPES AND CONSTANTS:
+
+    value_type:  The element type; must be int for this assigment
+    size_type:   Type to store the largest number of emelents;
+                  must be size_t for this assigment 
+
+MEMBER FUNCTIONS:
+
+    // Ctors/Dtor
+    StudentVec():          Default Ctor (default capacity must be 0)
+			   This means the the first push_back() must 
+                           allocate this initial memory extent. You
+			   must use a size of 2 for the first 
+                           allocation ( 2 ints).
+    StudentVec(size_type): Specify an initial capacity     
+    ~StudentVec():         Dtor
+
+    StudentVec(const StudentVec& other): Copy ctor. Perform a deep copy.
+
+    void   push_back(value_type):
+                Append  a value_type to the dynamic array. This and
+                StudentVec(size_type) are the only way to set and/or 
+                increase size().
+
+    size_t size()  const:
+                Return current size 
+                (number of elements the container currently holds)
+
+    size_t capacity()  const:
+		Return current capacity. this is the total number of
+		elements that can be added before a StudentVec
+ 		container needs to regrow (reallocate) itself. 
+		size() is always <= capacity().
+
+    operator=():   overloaded copy assignment operator
+
+    operator[]():  overloaded subscript operator
+
+By carefully tracing/examining my example run section below,
+as produced by my main() function bodies, you can
+unambiguously determine the precise semantics of
+each API function.
+
+The types value_type and size_type must be used in StudentVec.cpp
+and StudentVec.h for any form of sizing/element access.
+The only place int should appear in this context is where you
+specify the value_type and size_type declarations.
+
+IMPORTANT POINTS:
+
+- Implement your actual value_type storage as a dynamic array of
+	value_type. 
+
+- Your default capacity (allocated elements) must be 2.
+
+- You must use a "power of 2" allocation algorithm. 
+  Any time you extend (regrow) the current value_type array, you must
+  do so by a factor of 2 (2 * the current capacity()).
+
+- push_back()  appends (adds) a new element. If all of the existing
+	element memory is full, you must somehow allocate more
+        memory. VERY IMPORTANT: you must preserve the existing
+        element values!!!  This is conceptually like C's realloc().
+
+- This is important so that you don't waste time during development:
+	When you use operator[]() to assign into your StudentVec,
+        it does not do any reallocation operation. Therefore,
+ 	identical to Stdlib <vector>, you must only access
+	already allocated and initialzed elements. This means that
+	the only valid range to read/write elements with
+	operator[]() is [ 0 : size() - 1] inclusive. Accessing
+        element size() or greater is undefined.
+
+- In this assignment, only push_back() dynamically grows the
+   	underlying element storage. 
+
+- Think of size() as being all the currently stored elements. Only
+  push_back(), and not operator[](), can increase size.
+  If there is sufficient capacity(), push_back() only initializes
+  a new element with the value passed to it.
+
+  Stated differently, a push_back() does not need to perform a
+	memory allocation operation if size() <  capacity().
+
+- From the Stdlib, the vector(size_type) ctor both allocates, 
+  and initializes,
+  the number of elements from its argument. Note that in this
+  case, size() == capacity(). The default ctor is executed in
+  this case for all UDTs stored in a vector. (not an issue here,
+  since we are only storing ints)
+
+  From page 447 in the textbook, <vector> default initializes
+  built-in types to 0 of the appropriate type.
+
+  Your StudentVec(size_type) must also do this. I used
+  memset() from the C stdlib. You should also, since it's
+  easy for this.
+
+It helps to think of the elements in the inclusive range [0 : size() - 1] 
+as being both allocated and initialized, and the elements in the
+inclusive range [size() : capacity() - 1] as only being allocated,
+but not initialized. This explains why operator[]() may only
+access elements in the former and not the latter catagory.
+
+This means that you do not need to zero initialize the additional
+memory as a result of a regrow operation. The only time you
+must zero initialize is in StudentVec(size_type).
+
+Since StudentVec(size_type) both allocates and initializes the
+number of elements passed to it, all push_back() operations
+will grow the array from this point on.
+Test 6 shows this.
+
+Please refer to page 455 of our textbook to read about capacity()
+and size().
+
+Also, you should consider writing a "throw away" program using
+the Stdlib <vector>, to see the actual semantics of the subset
+required here. This assignment <vector> subset has identical
+semantics to <vector>.
+
+This is an "all or nothing" type of assignment. If one or more
+of my main() tests fail, the highest possible score will be 70.
+
+You must follow all the coding guidelines I issued.
+I will be very strictly grading according to these, and
+general programming practices.
+
+     1	Script started on Fri Dec 07 14:32:47 2001
+     2	ipx3% CC *.cpp
+     3	main1.cpp:
+     4	studentvec.cpp:
+     5	ipx3% a.out
+     6	============ Test 1 ==============
+     7	 1: size()     = 10
+     8	 2: capacity() = 16
+     9	 3: Printing sv1
+    10	 sv1[0] = 0
+    11	 sv1[1] = 1
+    12	 sv1[2] = 2
+    13	 sv1[3] = 3
+    14	 sv1[4] = 4
+    15	 sv1[5] = 5
+    16	 sv1[6] = 6
+    17	 sv1[7] = 7
+    18	 sv1[8] = 8
+    19	 sv1[9] = 9
+    20	============ Test 2 ==============
+    21	 4: size()     = 10
+    22	 5: capacity() = 16
+    23	 6: Printing sv2
+    24	 sv2[0] = 0
+    25	 sv2[1] = 1
+    26	 sv2[2] = 2
+    27	 sv2[3] = 3
+    28	 sv2[4] = 4
+    29	 sv2[5] = 5
+    30	 sv2[6] = 6
+    31	 sv2[7] = 7
+    32	 sv2[8] = 8
+    33	 sv2[9] = 9
+    34	============ Test 3 ==============
+    35	 7: size()     = 10
+    36	 8: capacity() = 16
+    37	 9: Printing sv3
+    38	 sv3[0] = 0
+    39	 sv3[1] = 1
+    40	 sv3[2] = 2
+    41	 sv3[3] = 3
+    42	 sv3[4] = 4
+    43	 sv3[5] = 5
+    44	 sv3[6] = 6
+    45	 sv3[7] = 7
+    46	 sv3[8] = 8
+    47	 sv3[9] = 9
+    48	============ Test 4 ==============
+    49	 10: size()     = 100000
+    50	 11: capacity() = 131072
+    51	============ Test 5 ==============
+    52	 12: size()     = 1500
+    53	 13: capacity() = 2000
+    54	============ Test 6 ==============
+    55	 14: size()     = 2500
+    56	 15: capacity() = 4000
+    57	============ Test 7 ==============
+    58	 16: size()     = 10000
+    59	 17: capacity() = 10000
+    60	
+    61	ipx3% exit
+    62	ipx3% 
+    63	script done on Fri Dec 07 14:37:45 2001
